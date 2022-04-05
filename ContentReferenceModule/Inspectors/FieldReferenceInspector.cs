@@ -40,8 +40,8 @@ namespace XperienceCommunity.ContentReferenceModule.Inspectors
                              .Select(c => treeNode.GetValue(c.ColumnName)?.ToGuid(Guid.Empty))
                              .Where(g => (g.HasValue && (g != Guid.Empty)))
                              .Select(g => g.Value);
-            returnList.AddRange(guidsFromStringColumns);
-            returnList.AddRange(guidsFromGuidColumns);
+            returnList.Union(guidsFromStringColumns)
+                      .Union(guidsFromGuidColumns);
             return returnList;
         }
 
