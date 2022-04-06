@@ -10,11 +10,9 @@ namespace XperienceCommunity.ContentReferenceModule.Inspectors
 {
     public class WidgetReferenceInspector : IReferenceInspector
     {
-        IDataClassRepository _dataClassRepository;
 
-        public WidgetReferenceInspector(IDataClassRepository dataClassRepository)
+        public WidgetReferenceInspector()
         {
-            _dataClassRepository = dataClassRepository;
         }
 
         public IEnumerable<Guid> GetPotentialContentReferences(TreeNode treeNode)

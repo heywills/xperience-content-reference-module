@@ -24,8 +24,7 @@ namespace ContentReferenceModule.IntegrationTests.Inspectors
                 .Published(onlyPublished)
                 .LatestVersion(!onlyPublished)
                 .FirstOrDefault();
-            var dataClassInfoRepository = new DataClassRepository();
-            var widgetReferenceInspector = new WidgetReferenceInspector(dataClassInfoRepository);
+            var widgetReferenceInspector = new WidgetReferenceInspector();
             var guidList = widgetReferenceInspector.GetPotentialContentReferences(treeNode);
             Assert.IsNotNull(guidList);
 
