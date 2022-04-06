@@ -40,7 +40,8 @@ namespace XperienceCommunity.ContentReferenceModule.Inspectors
                              .Where(g => (g.HasValue && (g != Guid.Empty)))
                              .Select(g => g.Value);
             returnList.Union(guidsFromStringColumns)
-                      .Union(guidsFromGuidColumns);
+                      .Union(guidsFromGuidColumns)
+                      .Distinct();
             return returnList;
         }
 

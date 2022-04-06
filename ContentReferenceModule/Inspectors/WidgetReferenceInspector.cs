@@ -30,6 +30,7 @@ namespace XperienceCommunity.ContentReferenceModule.Inspectors
             var guids = guidMatches
                              .Select(m => Guid.TryParse(m.Value, out var g) ? g : Guid.Empty)
                              .Where(g => g != Guid.Empty)
+                             .Distinct()
                              .ToList();
             return guids;
         }
