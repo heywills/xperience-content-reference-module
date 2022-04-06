@@ -5,9 +5,14 @@ VisualStudioVersion = 16.0.31829.152
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ContentReferenceModule", "ContentReferenceModule\ContentReferenceModule.csproj", "{03C53B38-0137-413A-9DF9-65F57D060EDC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ContentReferrenceModule.Tests", "ContentReferrenceModule.Tests\ContentReferrenceModule.Tests.csproj", "{20FBC362-EDB0-48B7-9D7D-9629300F6E81}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ContentReferrenceModule.Tests", "ContentReferrenceModule.Tests\ContentReferrenceModule.Tests.csproj", "{20FBC362-EDB0-48B7-9D7D-9629300F6E81}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ContentReferenceModule.IntegrationTests", "ContentReferenceModule.IntegrationTests\ContentReferenceModule.IntegrationTests.csproj", "{A8449674-AC31-4921-8107-44EF47292B0F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ContentReferenceModule.IntegrationTests", "ContentReferenceModule.IntegrationTests\ContentReferenceModule.IntegrationTests.csproj", "{A8449674-AC31-4921-8107-44EF47292B0F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{4515380F-DF40-4D97-B9CD-ED4FBC47501F}"
+	ProjectSection(SolutionItems) = preProject
+		README.md = README.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
