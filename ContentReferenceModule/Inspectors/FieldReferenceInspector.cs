@@ -1,9 +1,8 @@
 ﻿using CMS.Base;
-using CMS.DataEngine;
+using CMS.DocumentEngine;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using XperienceCommunity.ContentReferenceModule.Core;
 using XperienceCommunity.ContentReferenceModule.Extensions;
 
@@ -18,14 +17,14 @@ namespace XperienceCommunity.ContentReferenceModule.Inspectors
             _dataClassRepository = dataClassRepository;
         }
 
-        public IEnumerable<Guid> GetPotentialContentReferences(ITreeNode treeNode)
+        public IEnumerable<Guid> GetPotentialContentReferences(TreeNode treeNode)
         {
             // TODO: Add parameter guard
             var returnList = GetAllGuidReferences(treeNode);
             return returnList;
         }
 
-        private IEnumerable<Guid> GetAllGuidReferences(ITreeNode treeNode)
+        private IEnumerable<Guid> GetAllGuidReferences(TreeNode treeNode)
         {
             var returnList = new List<Guid>();
             var classStructureInfo = _dataClassRepository.GetClassStructureInfo(treeNode.ClassName);
@@ -45,7 +44,7 @@ namespace XperienceCommunity.ContentReferenceModule.Inspectors
             return returnList;
         }
 
-        private IEnumerable<Guid> GetGuidsFromTextColumn(ITreeNode treeNode, string columnName)
+        private IEnumerable<Guid> GetGuidsFromTextColumn(TreeNode treeNode, string columnName)
         {
             // TODO: Consider that some of text columns might have huge values. Consider
             // how to detect if its a value that contains delimited guids before calling Guidify

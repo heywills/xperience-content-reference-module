@@ -1,4 +1,4 @@
-﻿using CMS.Base;
+﻿using CMS.DocumentEngine;
 using System;
 using System.Collections.Generic;
 
@@ -12,6 +12,6 @@ namespace XperienceCommunity.ContentReferenceModule.Core
     /// </summary>
     interface IReferenceInspector
     {
-        IEnumerable<Guid> GetPotentialContentReferences(ITreeNode treeNode);
+        IEnumerable<Guid> GetPotentialContentReferences(TreeNode treeNode);
     }
 }

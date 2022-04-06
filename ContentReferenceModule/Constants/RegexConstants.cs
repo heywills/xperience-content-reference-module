@@ -4,8 +4,8 @@ using System.Text;
 
 namespace XperienceCommunity.ContentReferenceModule.Constants
 {
-    static class TreeNodeConstants
+    static class RegexConstants
     {
-        public const string NodeGUID = "NodeGUID";
+        public const string GuidPattern = "[{]?[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}[}]?";
     }
 }
