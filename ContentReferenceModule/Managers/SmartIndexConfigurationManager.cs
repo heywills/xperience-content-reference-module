@@ -13,10 +13,11 @@ namespace XperienceCommunity.ContentReferenceModule.Managers
     /// </summary>
     public class SmartIndexConfigurationManager
     {
-        private ISiteInfoProvider _siteInfoProvider;
-        private ISearchIndexSiteInfoProvider _searchIndexSiteInfoProvider;
-        private ISearchIndexCultureInfoProvider _searchIndexCultureInfoProvider;
-        private ISmartIndexSettings _smartIndexSettings;
+        private readonly ISiteInfoProvider _siteInfoProvider;
+        private readonly ISearchIndexSiteInfoProvider _searchIndexSiteInfoProvider;
+        private readonly ISearchIndexCultureInfoProvider _searchIndexCultureInfoProvider;
+        private readonly ISmartIndexSettings _smartIndexSettings;
+        private SearchIndexInfo _searchIndexInfo;
 
         /// <summary>
         /// 
@@ -24,6 +25,7 @@ namespace XperienceCommunity.ContentReferenceModule.Managers
         /// <param name="siteInfoProvider"></param>
         /// <param name="searchIndexSiteInfoProvider"></param>
         /// <param name="searchIndexCultureInfoProvider"></param>
+        /// <param name="smartIndexSettings"></param>
         public SmartIndexConfigurationManager(ISiteInfoProvider siteInfoProvider,
                                               ISearchIndexSiteInfoProvider searchIndexSiteInfoProvider,
                                               ISearchIndexCultureInfoProvider searchIndexCultureInfoProvider,
@@ -46,14 +48,27 @@ namespace XperienceCommunity.ContentReferenceModule.Managers
         /// </summary>
         public void InitializeSmartIndex()
         {
-            // TODO: Don't create a new index if one exists
-            using (new CMSActionContext { LogSynchronization = false })
+            _searchIndexInfo = GetSearchIndex() ??
+                               CreateSearchIndex();
+        }
+
+        private SearchIndexInfo GetSearchIndex()
+        {
+            // TODO: Verify and update search index settings
+            var searchIndexInfo = SearchIndexInfoProvider.GetSearchIndexInfo(_smartIndexSettings.IndexName);
+            return searchIndexInfo;
+        }
+
+        private SearchIndexInfo CreateSearchIndex()
+        {
+            using (new CMSActionContext {LogSynchronization = false})
             {
                 var searchIndexInfo = SearchIndexInfoFactory.Create(_smartIndexSettings.IndexName,
                                                                     _smartIndexSettings.IndexDisplayName);
                 SearchIndexInfoProvider.SetSearchIndexInfo(searchIndexInfo);
                 AddAllSitesToIndex(searchIndexInfo);
                 RebuildIndex(searchIndexInfo);
+                return searchIndexInfo;
             }
         }
 
