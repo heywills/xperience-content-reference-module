@@ -1,7 +1,9 @@
-﻿using CMS.Base;
+﻿using System;
+using CMS.Base;
 using CMS.Search;
 using CMS.SiteProvider;
 using System.Linq;
+using CMS.Localization;
 using XperienceCommunity.ContentReferenceModule.Core;
 using XperienceCommunity.ContentReferenceModule.Factories;
 using XperienceCommunity.ContentReferenceModule.Helpers;
@@ -16,7 +18,6 @@ namespace XperienceCommunity.ContentReferenceModule.Managers
         private readonly ISiteInfoProvider _siteInfoProvider;
         private readonly ISearchIndexSiteInfoProvider _searchIndexSiteInfoProvider;
         private readonly ISearchIndexCultureInfoProvider _searchIndexCultureInfoProvider;
-        private readonly ISmartIndexSettings _smartIndexSettings;
         private SearchIndexInfo _searchIndexInfo;
 
         /// <summary>
@@ -25,19 +26,13 @@ namespace XperienceCommunity.ContentReferenceModule.Managers
         /// <param name="siteInfoProvider"></param>
         /// <param name="searchIndexSiteInfoProvider"></param>
         /// <param name="searchIndexCultureInfoProvider"></param>
-        /// <param name="smartIndexSettings"></param>
         public SmartIndexConfigurationManager(ISiteInfoProvider siteInfoProvider,
                                               ISearchIndexSiteInfoProvider searchIndexSiteInfoProvider,
-                                              ISearchIndexCultureInfoProvider searchIndexCultureInfoProvider,
-                                              ISmartIndexSettings smartIndexSettings)
+                                              ISearchIndexCultureInfoProvider searchIndexCultureInfoProvider)
         {
-            Guard.ArgumentNotNull(smartIndexSettings);
             Guard.ArgumentNotNull(siteInfoProvider);
             Guard.ArgumentNotNull(searchIndexSiteInfoProvider);
             Guard.ArgumentNotNull(searchIndexCultureInfoProvider);
-            Guard.ArgumentNotNullOrEmpty(smartIndexSettings.IndexName);
-            Guard.ArgumentNotNullOrEmpty(smartIndexSettings.IndexDisplayName);
-            _smartIndexSettings = smartIndexSettings;
             _siteInfoProvider = siteInfoProvider;
             _searchIndexSiteInfoProvider = searchIndexSiteInfoProvider;
             _searchIndexCultureInfoProvider = searchIndexCultureInfoProvider;
@@ -46,25 +41,28 @@ namespace XperienceCommunity.ContentReferenceModule.Managers
         /// <summary>
         /// Initialize page index in Kentico with the provided index settings
         /// </summary>
-        public void InitializeSmartIndex()
+        public void InitializeSmartIndex(ISmartIndexSettings smartIndexSettings)
         {
-            _searchIndexInfo = GetSearchIndex() ??
-                               CreateSearchIndex();
+            Guard.ArgumentNotNull(smartIndexSettings);
+            Guard.ArgumentNotNullOrEmpty(smartIndexSettings.IndexName);
+            Guard.ArgumentNotNullOrEmpty(smartIndexSettings.IndexDisplayName);
+            _searchIndexInfo = GetSearchIndex(smartIndexSettings) ??
+                               CreateSearchIndex(smartIndexSettings);
         }
 
-        private SearchIndexInfo GetSearchIndex()
+        private SearchIndexInfo GetSearchIndex(ISmartIndexSettings smartIndexSettings)
         {
             // TODO: Verify and update search index settings
-            var searchIndexInfo = SearchIndexInfoProvider.GetSearchIndexInfo(_smartIndexSettings.IndexName);
+            var searchIndexInfo = SearchIndexInfoProvider.GetSearchIndexInfo(smartIndexSettings.IndexName);
             return searchIndexInfo;
         }
 
-        private SearchIndexInfo CreateSearchIndex()
+        private SearchIndexInfo CreateSearchIndex(ISmartIndexSettings smartIndexSettings)
         {
             using (new CMSActionContext {LogSynchronization = false})
             {
-                var searchIndexInfo = SearchIndexInfoFactory.Create(_smartIndexSettings.IndexName,
-                                                                    _smartIndexSettings.IndexDisplayName);
+                var searchIndexInfo = SearchIndexInfoFactory.Create(smartIndexSettings.IndexName,
+                                                                    smartIndexSettings.IndexDisplayName);
                 SearchIndexInfoProvider.SetSearchIndexInfo(searchIndexInfo);
                 AddAllSitesToIndex(searchIndexInfo);
                 RebuildIndex(searchIndexInfo);
@@ -73,25 +71,41 @@ namespace XperienceCommunity.ContentReferenceModule.Managers
         }
 
         /// <summary>
+        /// Add a site to the content of the managed index.
+        /// </summary>
+        /// <param name="siteInfo"></param>
+        public void AddSite(SiteInfo siteInfo)
+        {
+            VerifyInitialization();
+            AddSite(_searchIndexInfo, siteInfo);
+        }
+
+        public void AddCulture(CultureInfo cultureInfo)
+        {
+            VerifyInitialization();
+            AddCulture(_searchIndexInfo, cultureInfo);
+        }
+
+        /// <summary>
         /// Helper method to add a site to the content index
         /// </summary>
-        /// <param name="indexId">The identifier of the index</param>
         /// <param name="siteInfo">The SiteInfo to add</param>
-        private void AddSite(int indexId, SiteInfo siteInfo)
+        /// <param name="searchIndexInfo"></param>
+        private void AddSite(SearchIndexInfo searchIndexInfo, SiteInfo siteInfo)
         {
-            _searchIndexSiteInfoProvider.Add(indexId, siteInfo.SiteID);
+            _searchIndexSiteInfoProvider.Add(searchIndexInfo.IndexID, siteInfo.SiteID);
             var siteCultures = CultureSiteInfoProvider.GetSiteCultures(siteInfo.SiteName).ToList();
-            siteCultures.ForEach(c => AddCulture(indexId, c.CultureID));
+            siteCultures.ForEach(c => AddCulture(searchIndexInfo, c));
         }
 
         /// <summary>
         /// Helper method to add a culture to the content index
         /// </summary>
-        /// <param name="indexId">The identifier of the index</param>
-        /// <param name="cultureId">The identifier of the culture</param>
-        private void AddCulture(int indexId, int cultureId)
+        /// <param name="searchIndexInfo"></param>
+        /// <param name="cultureInfo"></param>
+        private void AddCulture(SearchIndexInfo searchIndexInfo, CultureInfo cultureInfo)
         {
-            _searchIndexCultureInfoProvider.Add(indexId, cultureId);
+            _searchIndexCultureInfoProvider.Add(searchIndexInfo.IndexID, cultureInfo.CultureID);
         }
 
         /// <summary>
@@ -101,8 +115,7 @@ namespace XperienceCommunity.ContentReferenceModule.Managers
         private void AddAllSitesToIndex(SearchIndexInfo searchIndexInfo)
         {
             var sites = _siteInfoProvider.Get().ToList();
-            var indexId = searchIndexInfo.IndexID;
-            sites.ForEach(s => AddSite(indexId, s));
+            sites.ForEach(s => AddSite(searchIndexInfo, s));
         }
 
         /// <summary>
@@ -116,6 +129,15 @@ namespace XperienceCommunity.ContentReferenceModule.Managers
                                               null,
                                               searchIndexInfo.IndexName, 
                                               searchIndexInfo.IndexID);
+        }
+
+        private void VerifyInitialization()
+        {
+            if (_searchIndexInfo == null)
+            {
+                throw new InvalidOperationException(
+                    $"{nameof(SmartIndexConfigurationManager)} must be initialized before calling this method.");
+            }
         }
     }
 }

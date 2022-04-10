@@ -6,17 +6,17 @@ using XperienceCommunity.ContentReferenceModule.Core;
 using XperienceCommunity.ContentReferenceModule.Managers;
 using XperienceCommunity.ContentReferenceModule.Models;
 
-namespace ContentReferenceModule.IntegrationTests.Helpers
+namespace ContentReferenceModule.IntegrationTests.Managers
 {
     [TestFixture]
     public class SmartIndexConfigurationManagerTests
     {
-        private ISiteInfoProvider _siteInfoProvider = Service.Resolve<ISiteInfoProvider>();
-        private ISearchIndexSiteInfoProvider _searchIndexSiteInfoProvider = Service.Resolve<ISearchIndexSiteInfoProvider>();
-        private ISearchIndexCultureInfoProvider _searchIndexCultureInfoProvider = Service.Resolve<ISearchIndexCultureInfoProvider>();
-        private ISmartIndexSettings _smartIndexSettings = new SmartIndexSettings()
+        private readonly ISiteInfoProvider _siteInfoProvider = Service.Resolve<ISiteInfoProvider>();
+        private readonly ISearchIndexSiteInfoProvider _searchIndexSiteInfoProvider = Service.Resolve<ISearchIndexSiteInfoProvider>();
+        private readonly ISearchIndexCultureInfoProvider _searchIndexCultureInfoProvider = Service.Resolve<ISearchIndexCultureInfoProvider>();
+        private readonly ISmartIndexSettings _smartIndexSettings = new SmartIndexSettings()
         {
-            IndexName = "ContentRefererenceModule_IntegrationTests",
+            IndexName = "ContentReferenceModule_IntegrationTests",
             IndexDisplayName = "Content Reference Module (Integration Tests Index)"
         };
 
@@ -25,9 +25,8 @@ namespace ContentReferenceModule.IntegrationTests.Helpers
         {
             var smartIndexConfigurationHelper = new SmartIndexConfigurationManager(_siteInfoProvider,
                                                                                   _searchIndexSiteInfoProvider,
-                                                                                  _searchIndexCultureInfoProvider,
-                                                                                  _smartIndexSettings);
-            smartIndexConfigurationHelper.InitializeSmartIndex();
+                                                                                  _searchIndexCultureInfoProvider);
+            smartIndexConfigurationHelper.InitializeSmartIndex(_smartIndexSettings);
             Assert.Pass();
         }
     }
