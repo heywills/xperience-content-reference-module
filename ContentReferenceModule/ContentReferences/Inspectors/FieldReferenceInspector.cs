@@ -1,16 +1,16 @@
-﻿using CMS.Base;
-using CMS.DocumentEngine;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using XperienceCommunity.ContentReferenceModule.Core;
-using XperienceCommunity.ContentReferenceModule.Extensions;
+using CMS.Base;
+using CMS.DocumentEngine;
+using XperienceCommunity.ContentReferenceModule.Cms.Core;
+using XperienceCommunity.ContentReferenceModule.Helpers;
 
-namespace XperienceCommunity.ContentReferenceModule.Inspectors
+namespace XperienceCommunity.ContentReferenceModule.ContentReferences.Inspectors
 {
     public class FieldReferenceInspector : IReferenceInspector
     {
-        IDataClassRepository _dataClassRepository;
+        private readonly IDataClassRepository _dataClassRepository;
 
         public FieldReferenceInspector(IDataClassRepository dataClassRepository)
         {
@@ -39,9 +39,10 @@ namespace XperienceCommunity.ContentReferenceModule.Inspectors
                              .Select(c => treeNode.GetValue(c.ColumnName)?.ToGuid(Guid.Empty))
                              .Where(g => (g.HasValue && (g != Guid.Empty)))
                              .Select(g => g.Value);
-            returnList.Union(guidsFromStringColumns)
+            returnList = returnList.Union(guidsFromStringColumns)
                       .Union(guidsFromGuidColumns)
-                      .Distinct();
+                      .Distinct()
+                      .ToList();
             return returnList;
         }
 
@@ -50,9 +51,8 @@ namespace XperienceCommunity.ContentReferenceModule.Inspectors
             // TODO: Consider that some of text columns might have huge values. Consider
             // how to detect if its a value that contains delimited guids before calling Guidify
             var returnList = new List<Guid>();
-            object columnValue;
-            if (!(treeNode.TryGetValue(columnName, out columnValue) &&
-                columnValue is string))
+            if (!(treeNode.TryGetValue(columnName, out var columnValue) &&
+                  columnValue is string))
             {
                 return returnList;
             }

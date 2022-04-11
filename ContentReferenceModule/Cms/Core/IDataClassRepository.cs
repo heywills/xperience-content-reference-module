@@ -1,6 +1,6 @@
 ﻿using CMS.DataEngine;
 
-namespace XperienceCommunity.ContentReferenceModule.Core
+namespace XperienceCommunity.ContentReferenceModule.Cms.Core
 {
     public interface IDataClassRepository
     {

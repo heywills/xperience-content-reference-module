@@ -1,7 +1,7 @@
 ﻿using CMS.DataEngine;
-using XperienceCommunity.ContentReferenceModule.Core;
+using XperienceCommunity.ContentReferenceModule.Cms.Core;
 
-namespace XperienceCommunity.ContentReferenceModule.Repositories
+namespace XperienceCommunity.ContentReferenceModule.Cms.Repositories
 {
     public class DataClassRepository : IDataClassRepository
     {

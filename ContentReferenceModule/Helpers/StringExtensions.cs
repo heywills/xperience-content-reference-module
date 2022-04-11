@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
-namespace XperienceCommunity.ContentReferenceModule.Extensions
+namespace XperienceCommunity.ContentReferenceModule.Helpers
 {
     public static class StringExtensions
     {
@@ -11,22 +9,22 @@ namespace XperienceCommunity.ContentReferenceModule.Extensions
 		/// Takes a string and returns a list of GUIDs using the split character provided. Only valid guids will return. 
 		/// Will return null if the string does not contain any valid GUIDs. 
 		/// To support legacy behavior if the split character is ";" then it will match both "," and ";" if you do not
-		/// want this behavior use the override List(Guid) Guidify(this string value, params char[] seperator)
+		/// want this behavior use the override List(Guid) Guidify(this string value, params char[] separator)
 		/// </summary>
 		/// <param name="value"></param>
 		/// <param name="splitCharacter"></param>
 		/// <returns>An emptry List(Guid) if none are found.</returns>
 		public static IEnumerable<Guid> Guidify(this string value, string splitCharacter = ";")
 		{
-			var seperator = new char[] { char.Parse(splitCharacter) };
+			var separator = new[] { char.Parse(splitCharacter) };
 
 			// To support legacy behavior if the split char is ";" then we also match ","
 			if (splitCharacter == ";")
 			{
-				seperator = new char[] { ',', ';' };
+				separator = new[] { ',', ';' };
 			}
 
-			return value.Guidify(seperator);
+			return value.Guidify(separator);
 		}
 
 		/// <summary>
@@ -34,35 +32,35 @@ namespace XperienceCommunity.ContentReferenceModule.Extensions
 		/// Will return null if the string does not contain any valid GUIDs.
 		/// </summary>
 		/// <param name="value"></param>
-		/// <param name="seperator">List of seperator character to split the string on</param>
+		/// <param name="separator">List of separator character to split the string on</param>
 		/// <returns>NULL if no guids are present or a list of guids.</returns>
-		public static IEnumerable<Guid> Guidify(this string value, params char[] seperator)
+		public static IEnumerable<Guid> Guidify(this string value, params char[] separator)
 		{
 			var list = new List<Guid>(); // no checking for nulls
-			if (!string.IsNullOrWhiteSpace(value))
-			{
-				var guids = value.SplitStringAndTrim(seperator);
-				if (guids != null && guids.Any())
-				{
-					foreach (var g in guids)
-					{
-						if (Guid.TryParse(g, out Guid guid))
-						{
-							list.Add(guid);
-						}
-					}
-					return list;
-				}
-			}
-			return list;
-		}
+            if (string.IsNullOrWhiteSpace(value))
+            {
+                return list;
+            }
+            var guidList = value.SplitStringAndTrim(separator);
+            if (guidList == null)
+            {
+                return list;
+            }
+            foreach (var g in guidList)
+            {
+                if (Guid.TryParse(g, out var guid))
+                {
+                    list.Add(guid);
+                }
+            }
+            return list;
+        }
 
 		public static IEnumerable<string> SplitStringAndTrim(this string helper, params char[] seperator)
 		{
-			//Get string coll of items
-			string[] values = null;
-			values = helper.Split(seperator);
-			var list = new List<string>();
+            //Get string coll of items
+            string[] values = helper.Split(seperator);
+            var list = new List<string>();
 			foreach (var s in values)
 			{
 				var thisVal = s.Trim();

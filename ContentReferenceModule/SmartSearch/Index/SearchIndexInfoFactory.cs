@@ -1,11 +1,8 @@
 ﻿using CMS.DataEngine;
 using CMS.DocumentEngine;
 using CMS.Search;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace XperienceCommunity.ContentReferenceModule.Factories
+namespace XperienceCommunity.ContentReferenceModule.SmartSearch.Index
 {
     public static class SearchIndexInfoFactory
     {

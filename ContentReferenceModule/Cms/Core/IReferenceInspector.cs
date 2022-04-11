@@ -1,8 +1,8 @@
-﻿using CMS.DocumentEngine;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using CMS.DocumentEngine;
 
-namespace XperienceCommunity.ContentReferenceModule.Core
+namespace XperienceCommunity.ContentReferenceModule.Cms.Core
 {
     /// <summary>
     /// Supports various implementations capable of inspecting an Xperience page for content

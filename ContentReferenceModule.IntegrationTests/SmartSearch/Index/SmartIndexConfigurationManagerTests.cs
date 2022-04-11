@@ -2,11 +2,10 @@
 using CMS.Search;
 using CMS.SiteProvider;
 using NUnit.Framework;
-using XperienceCommunity.ContentReferenceModule.Core;
-using XperienceCommunity.ContentReferenceModule.Managers;
-using XperienceCommunity.ContentReferenceModule.Models;
+using XperienceCommunity.ContentReferenceModule.SmartSearch.Index;
+using XperienceCommunity.ContentReferenceModule.SmartSearch.Models;
 
-namespace ContentReferenceModule.IntegrationTests.Managers
+namespace ContentReferenceModule.IntegrationTests.SmartSearch.Index
 {
     [TestFixture]
     public class SmartIndexConfigurationManagerTests
@@ -14,7 +13,7 @@ namespace ContentReferenceModule.IntegrationTests.Managers
         private readonly ISiteInfoProvider _siteInfoProvider = Service.Resolve<ISiteInfoProvider>();
         private readonly ISearchIndexSiteInfoProvider _searchIndexSiteInfoProvider = Service.Resolve<ISearchIndexSiteInfoProvider>();
         private readonly ISearchIndexCultureInfoProvider _searchIndexCultureInfoProvider = Service.Resolve<ISearchIndexCultureInfoProvider>();
-        private readonly ISmartIndexSettings _smartIndexSettings = new SmartIndexSettings()
+        private readonly SmartIndexSettings _smartIndexSettings = new SmartIndexSettings()
         {
             IndexName = "ContentReferenceModule_IntegrationTests",
             IndexDisplayName = "Content Reference Module (Integration Tests Index)"

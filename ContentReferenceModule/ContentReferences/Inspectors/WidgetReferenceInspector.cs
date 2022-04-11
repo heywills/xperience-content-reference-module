@@ -1,20 +1,15 @@
-﻿using CMS.DocumentEngine;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using CMS.DocumentEngine;
+using XperienceCommunity.ContentReferenceModule.Cms.Core;
 using XperienceCommunity.ContentReferenceModule.Constants;
-using XperienceCommunity.ContentReferenceModule.Core;
 
-namespace XperienceCommunity.ContentReferenceModule.Inspectors
+namespace XperienceCommunity.ContentReferenceModule.ContentReferences.Inspectors
 {
     public class WidgetReferenceInspector : IReferenceInspector
     {
-
-        public WidgetReferenceInspector()
-        {
-        }
-
         public IEnumerable<Guid> GetPotentialContentReferences(TreeNode treeNode)
         {
             // TODO: Add parameter guard

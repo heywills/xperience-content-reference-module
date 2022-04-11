@@ -1,9 +1,7 @@
-﻿using CMS.DataEngine;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System;
+using CMS.DataEngine;
 
-namespace XperienceCommunity.ContentReferenceModule.Factories
+namespace XperienceCommunity.ContentReferenceModule.SmartSearch.Index
 {
     /// <summary>
     /// Static factory methods for reating a SearchIndexSettings object

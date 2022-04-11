@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Linq;
 using CMS.DocumentEngine;
 using NUnit.Framework;
-using XperienceCommunity.ContentReferenceModule.Inspectors;
-using XperienceCommunity.ContentReferenceModule.Repositories;
+using XperienceCommunity.ContentReferenceModule.ContentReferences.Inspectors;
 
-namespace ContentReferenceModule.IntegrationTests.Inspectors
+namespace ContentReferenceModule.IntegrationTests.ContentReferences.Inspectors
 {
     [TestFixture]
     public class PageRelationshipInspectorTests
@@ -15,7 +11,7 @@ namespace ContentReferenceModule.IntegrationTests.Inspectors
         [Test()]
         public void GetPotentialContentReferences_Returns_Discovered_Guids()
         {
-            bool onlyPublished = false;
+            const bool onlyPublished = false;
             var treeNode = DocumentHelper.GetDocuments()
                 .Path("/Home")
                 .OnSite("DfwJobs.Web")

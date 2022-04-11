@@ -1,14 +1,13 @@
 ﻿using System;
+using System.Linq;
 using CMS.Base;
+using CMS.Localization;
 using CMS.Search;
 using CMS.SiteProvider;
-using System.Linq;
-using CMS.Localization;
-using XperienceCommunity.ContentReferenceModule.Core;
-using XperienceCommunity.ContentReferenceModule.Factories;
 using XperienceCommunity.ContentReferenceModule.Helpers;
+using XperienceCommunity.ContentReferenceModule.SmartSearch.Models;
 
-namespace XperienceCommunity.ContentReferenceModule.Managers
+namespace XperienceCommunity.ContentReferenceModule.SmartSearch.Index
 {
     /// <summary>
     /// Helper methods for creating and managing a Kentico Smart Index.
@@ -41,7 +40,7 @@ namespace XperienceCommunity.ContentReferenceModule.Managers
         /// <summary>
         /// Initialize page index in Kentico with the provided index settings
         /// </summary>
-        public void InitializeSmartIndex(ISmartIndexSettings smartIndexSettings)
+        public void InitializeSmartIndex(SmartIndexSettings smartIndexSettings)
         {
             Guard.ArgumentNotNull(smartIndexSettings);
             Guard.ArgumentNotNullOrEmpty(smartIndexSettings.IndexName);
@@ -50,14 +49,14 @@ namespace XperienceCommunity.ContentReferenceModule.Managers
                                CreateSearchIndex(smartIndexSettings);
         }
 
-        private SearchIndexInfo GetSearchIndex(ISmartIndexSettings smartIndexSettings)
+        private SearchIndexInfo GetSearchIndex(SmartIndexSettings smartIndexSettings)
         {
             // TODO: Verify and update search index settings
             var searchIndexInfo = SearchIndexInfoProvider.GetSearchIndexInfo(smartIndexSettings.IndexName);
             return searchIndexInfo;
         }
 
-        private SearchIndexInfo CreateSearchIndex(ISmartIndexSettings smartIndexSettings)
+        private SearchIndexInfo CreateSearchIndex(SmartIndexSettings smartIndexSettings)
         {
             using (new CMSActionContext {LogSynchronization = false})
             {
