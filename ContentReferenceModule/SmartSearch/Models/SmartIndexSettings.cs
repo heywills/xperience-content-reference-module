@@ -1,6 +1,8 @@
-﻿namespace XperienceCommunity.ContentReferenceModule.SmartSearch.Models
+﻿using XperienceCommunity.ContentReferenceModule.SmartSearch.Core;
+
+namespace XperienceCommunity.ContentReferenceModule.SmartSearch.Models
 {
-    public class SmartIndexSettings 
+    public class SmartIndexSettings : ISmartIndexSettings
     {
         public string IndexName { get; set; }
 

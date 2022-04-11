@@ -1,6 +1,6 @@
 ﻿namespace XperienceCommunity.ContentReferenceModule.Constants
 {
-    static class TreeNodeFieldNameConstants
+    internal static class TreeNodeFieldNameConstants
     {
         public const string NodeGuid = "NodeGUID";
         public const string DocumentPageBuilderWidgets = "DocumentPageBuilderWidgets";
