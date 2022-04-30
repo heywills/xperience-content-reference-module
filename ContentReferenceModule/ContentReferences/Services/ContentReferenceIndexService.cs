@@ -6,14 +6,14 @@ using XperienceCommunity.ContentReferenceModule.Constants;
 using XperienceCommunity.ContentReferenceModule.ContentReferences.Core;
 using XperienceCommunity.ContentReferenceModule.SmartSearch.Core;
 
-namespace XperienceCommunity.ContentReferenceModule.ContentReferences
+namespace XperienceCommunity.ContentReferenceModule.ContentReferences.Services
 {
     /// <summary>
     /// Ensure the Content Reference index is created, that its being updated when
     /// content is changed, and that its configuration is updated when site and site-culture
     /// changes occur.
     /// </summary>
-    class ContentReferenceIndexService
+    internal class ContentReferenceIndexService : IContentReferenceIndexService
     {
         private readonly ISmartIndexConfigurationManager _smartIndexConfigurationManager;
         private readonly ISmartIndexSettings _smartIndexSettings;
@@ -79,7 +79,7 @@ namespace XperienceCommunity.ContentReferenceModule.ContentReferences
         private void ContentObjectUsageIndex_AddCultureSite(object sender, ObjectEventArgs e)
         {
             var cultureSiteInfo = (CultureSiteInfo)e?.Object;
-            if(cultureSiteInfo != null)
+            if (cultureSiteInfo != null)
             {
                 _smartIndexConfigurationManager.AddCulture(cultureSiteInfo);
             }

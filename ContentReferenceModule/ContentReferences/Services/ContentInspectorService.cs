@@ -6,7 +6,7 @@ using XperienceCommunity.ContentReferenceModule.Cms.Core;
 using XperienceCommunity.ContentReferenceModule.ContentReferences.Core;
 using XperienceCommunity.ContentReferenceModule.Helpers;
 
-namespace XperienceCommunity.ContentReferenceModule.ContentReferences
+namespace XperienceCommunity.ContentReferenceModule.ContentReferences.Services
 {
     /// <summary>
     /// Uses the list of registered IReferenceInspectors to find all nodes
