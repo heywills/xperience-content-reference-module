@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using CMS.DocumentEngine;
 
-namespace XperienceCommunity.ContentReferenceModule.Cms.Core
+namespace XperienceCommunity.ContentReferenceModule.ContentReferences.Core
 {
     /// <summary>
     /// Supports various implementations capable of inspecting an Xperience page for content
@@ -10,8 +10,8 @@ namespace XperienceCommunity.ContentReferenceModule.Cms.Core
     /// be NodeGuids, so its necessary to validate them after all IReferenceInspecfors are used
     /// to create a list of guids.
     /// </summary>
-    interface IReferenceInspector
+    public interface IReferenceInspector
     {
-        IEnumerable<Guid> GetPotentialContentReferences(TreeNode treeNode);
+        public IEnumerable<Guid> GetPotentialContentReferences(TreeNode treeNode);
     }
 }

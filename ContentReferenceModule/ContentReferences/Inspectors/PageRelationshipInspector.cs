@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using CMS.DocumentEngine;
-using XperienceCommunity.ContentReferenceModule.Cms.Core;
+using XperienceCommunity.ContentReferenceModule.ContentReferences.Core;
 
 namespace XperienceCommunity.ContentReferenceModule.ContentReferences.Inspectors
 {

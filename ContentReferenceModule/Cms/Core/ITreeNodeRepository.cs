@@ -4,7 +4,7 @@ using CMS.DocumentEngine;
 
 namespace XperienceCommunity.ContentReferenceModule.Cms.Core
 {
-    interface ITreeNodeRepository
+    public interface ITreeNodeRepository
     {
         IEnumerable<TreeNode> GetTreeNodesByGuids(IEnumerable<Guid> guids, string culture, bool onlyPublished);
     }

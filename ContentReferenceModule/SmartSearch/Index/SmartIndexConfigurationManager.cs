@@ -89,11 +89,11 @@ namespace XperienceCommunity.ContentReferenceModule.SmartSearch.Index
         /// <summary>
         /// Add a culture to the content of the managed index
         /// </summary>
-        /// <param name="cultureInfo"></param>
-        public void AddCulture(CultureInfo cultureInfo)
+        /// <param name="cultureSiteInfo"></param>
+        public void AddCulture(CultureSiteInfo cultureSiteInfo)
         {
             VerifyInitialization();
-            AddCulture(_searchIndexInfo, cultureInfo);
+            AddCulture(_searchIndexInfo, cultureSiteInfo.CultureID);
         }
 
         /// <summary>
@@ -105,17 +105,17 @@ namespace XperienceCommunity.ContentReferenceModule.SmartSearch.Index
         {
             _searchIndexSiteInfoProvider.Add(searchIndexInfo.IndexID, siteInfo.SiteID);
             var siteCultures = CultureSiteInfoProvider.GetSiteCultures(siteInfo.SiteName).ToList();
-            siteCultures.ForEach(c => AddCulture(searchIndexInfo, c));
+            siteCultures.ForEach(c => AddCulture(searchIndexInfo, c.CultureID));
         }
 
         /// <summary>
         /// Helper method to add a culture to the content index
         /// </summary>
         /// <param name="searchIndexInfo"></param>
-        /// <param name="cultureInfo"></param>
-        private void AddCulture(SearchIndexInfo searchIndexInfo, CultureInfo cultureInfo)
+        /// <param name="cultureId"></param>
+        private void AddCulture(SearchIndexInfo searchIndexInfo, int cultureId)
         {
-            _searchIndexCultureInfoProvider.Add(searchIndexInfo.IndexID, cultureInfo.CultureID);
+            _searchIndexCultureInfoProvider.Add(searchIndexInfo.IndexID, cultureId);
         }
 
         /// <summary>

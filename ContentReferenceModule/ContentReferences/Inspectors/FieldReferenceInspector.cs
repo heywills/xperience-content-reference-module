@@ -4,6 +4,7 @@ using System.Linq;
 using CMS.Base;
 using CMS.DocumentEngine;
 using XperienceCommunity.ContentReferenceModule.Cms.Core;
+using XperienceCommunity.ContentReferenceModule.ContentReferences.Core;
 using XperienceCommunity.ContentReferenceModule.Helpers;
 
 namespace XperienceCommunity.ContentReferenceModule.ContentReferences.Inspectors

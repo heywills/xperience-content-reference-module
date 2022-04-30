@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using CMS.DocumentEngine;
-using XperienceCommunity.ContentReferenceModule.Cms.Core;
+using XperienceCommunity.ContentReferenceModule.ContentReferences.Core;
 using XperienceCommunity.ContentReferenceModule.Constants;
 
 namespace XperienceCommunity.ContentReferenceModule.ContentReferences.Inspectors

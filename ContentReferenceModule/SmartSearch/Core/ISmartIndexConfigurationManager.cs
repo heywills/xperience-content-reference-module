@@ -19,7 +19,7 @@ namespace XperienceCommunity.ContentReferenceModule.SmartSearch.Core
         /// <summary>
         /// Add a culture to the content of the managed index
         /// </summary>
-        /// <param name="cultureInfo"></param>
-        void AddCulture(CultureInfo cultureInfo);
+        /// <param name="cultureSiteInfo"></param>
+        void AddCulture(CultureSiteInfo cultureSiteInfo);
     }
 }
