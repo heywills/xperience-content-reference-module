@@ -1,4 +1,13 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using XperienceCommunity.ContentReferenceModule.Cms.Core;
+using XperienceCommunity.ContentReferenceModule.Cms.Repositories;
+using XperienceCommunity.ContentReferenceModule.Constants;
+using XperienceCommunity.ContentReferenceModule.ContentReferences.Core;
+using XperienceCommunity.ContentReferenceModule.ContentReferences.Inspectors;
+using XperienceCommunity.ContentReferenceModule.ContentReferences.Services;
+using XperienceCommunity.ContentReferenceModule.SmartSearch.Core;
+using XperienceCommunity.ContentReferenceModule.SmartSearch.Index;
+using XperienceCommunity.ContentReferenceModule.SmartSearch.Models;
 
 namespace XperienceCommunity.ContentReferenceModule.Infrastructure.Extensions
 {
@@ -16,8 +25,19 @@ namespace XperienceCommunity.ContentReferenceModule.Infrastructure.Extensions
         /// <returns></returns>
         public static IServiceCollection UseContentReferenceService(this IServiceCollection services)
         {
-            //services.AddTransient<IConfigurationHelper, ConfigurationHelper>();
-            //services.AddSingleton<IStagingConfigurationHelper, StagingConfigurationHelper>();
+            services.AddSingleton<ISmartIndexSettings>(new SmartIndexSettings()
+            {
+                IndexName = ContentReferenceServiceConstants.IndexName,
+                IndexDisplayName = ContentReferenceServiceConstants.IndexDisplayName
+            });
+            services.AddTransient<IDataClassRepository, DataClassRepository>();
+            services.AddTransient<ITreeNodeRepository, TreeNodeRepository> ();
+            services.AddTransient<IContentInspectorService, ContentInspectorService>();
+            services.AddTransient<IContentReferenceIndexService, ContentReferenceIndexService>();
+            services.AddTransient<IReferenceInspector, FieldReferenceInspector>();
+            services.AddTransient<IReferenceInspector, PageRelationshipInspector>();
+            services.AddTransient<IReferenceInspector, WidgetReferenceInspector>();
+            services.AddTransient<ISmartIndexConfigurationManager, SmartIndexConfigurationManager>();
             return services;
         }
     }
