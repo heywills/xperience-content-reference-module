@@ -19,9 +19,9 @@ namespace XperienceCommunity.ContentReferenceModule.ContentReferences.Services
         private readonly ISmartIndexSettings _smartIndexSettings;
         private readonly IContentInspectorService _contentInspectorService;
 
-        internal ContentReferenceIndexService(ISmartIndexConfigurationManager smartIndexConfigurationManager,
-                                              ISmartIndexSettings smartIndexSettings,
-                                              IContentInspectorService contentInspectorService)
+        public ContentReferenceIndexService(ISmartIndexConfigurationManager smartIndexConfigurationManager,
+                                            ISmartIndexSettings smartIndexSettings,
+                                            IContentInspectorService contentInspectorService)
         {
             _smartIndexConfigurationManager = smartIndexConfigurationManager;
             _smartIndexSettings = smartIndexSettings;

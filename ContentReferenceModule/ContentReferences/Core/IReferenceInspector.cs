@@ -12,6 +12,6 @@ namespace XperienceCommunity.ContentReferenceModule.ContentReferences.Core
     /// </summary>
     public interface IReferenceInspector
     {
-        public IEnumerable<Guid> GetPotentialContentReferences(TreeNode treeNode);
+        IEnumerable<Guid> GetPotentialContentReferences(TreeNode treeNode);
     }
 }

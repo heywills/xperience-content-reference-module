@@ -14,10 +14,10 @@ namespace XperienceCommunity.ContentReferenceModule.ContentReferences.Services
     /// </summary>
     public class ContentInspectorService : IContentInspectorService
     {
-        IReferenceInspector[] _referenceInspectors;
+        IEnumerable<IReferenceInspector> _referenceInspectors;
         ITreeNodeRepository _treeNodeRepository;
 
-        public ContentInspectorService(IReferenceInspector[] referenceInspectors,
+        public ContentInspectorService(IEnumerable<IReferenceInspector> referenceInspectors,
                                        ITreeNodeRepository treeNodeRepository)
         {
             _referenceInspectors = referenceInspectors;

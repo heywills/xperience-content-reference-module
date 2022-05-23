@@ -23,6 +23,7 @@ namespace XperienceCommunity.ContentReferenceModule.ContentReferences.Inspectors
             var guidRegex = new Regex(RegexConstants.GuidPattern);
             var guidMatches = guidRegex.Matches(documentPageBuilderWidgets);
             var guids = guidMatches
+                             .Cast<Match>()
                              .Select(m => Guid.TryParse(m.Value, out var g) ? g : Guid.Empty)
                              .Where(g => g != Guid.Empty)
                              .Distinct()

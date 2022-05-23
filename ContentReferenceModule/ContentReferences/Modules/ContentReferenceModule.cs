@@ -8,6 +8,7 @@ using XperienceCommunity.ContentReferenceModule.ContentReferences.Core;
 using XperienceCommunity.ContentReferenceModule.ContentReferences.Modules;
 using XperienceCommunity.ContentReferenceModule.Infrastructure.Helpers;
 
+[assembly: AssemblyDiscoverable]
 [assembly: RegisterModule(typeof(ContentReferenceModule))]
 
 namespace XperienceCommunity.ContentReferenceModule.ContentReferences.Modules

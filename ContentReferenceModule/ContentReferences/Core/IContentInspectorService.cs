@@ -7,6 +7,6 @@ namespace XperienceCommunity.ContentReferenceModule.ContentReferences.Core
 {
     interface IContentInspectorService
     {
-        public IEnumerable<Guid> GetContentReferences(TreeNode treeNode);
+        IEnumerable<Guid> GetContentReferences(TreeNode treeNode);
     }
 }
