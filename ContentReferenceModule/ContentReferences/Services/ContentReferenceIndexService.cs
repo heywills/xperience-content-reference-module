@@ -60,9 +60,9 @@ namespace XperienceCommunity.ContentReferenceModule.ContentReferences.Services
             var contentReferences = _contentInspectorService.GetContentReferences(treeNode);
 
 
-            var nodeGuidsAsSearchTersm = string.Join(" ", contentReferences);
+            var nodeGuidsAsSearchTerms = string.Join(" ", contentReferences);
             e.SearchDocument.Add(ContentReferenceServiceConstants.IndexNodeReferencesFieldName,
-                                 nodeGuidsAsSearchTersm,
+                                 nodeGuidsAsSearchTerms,
                                  false,
                                  true);
         }
