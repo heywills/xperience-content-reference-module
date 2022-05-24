@@ -63,7 +63,7 @@ namespace XperienceCommunity.ContentReferenceModule.ContentReferences.Services
             var nodeGuidsAsSearchTerms = string.Join(" ", contentReferences);
             e.SearchDocument.Add(ContentReferenceServiceConstants.IndexNodeReferencesFieldName,
                                  nodeGuidsAsSearchTerms,
-                                 false,
+                                 true,
                                  true);
         }
 
