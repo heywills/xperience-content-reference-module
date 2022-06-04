@@ -64,7 +64,11 @@ namespace XperienceCommunity.ContentReferenceModule.SmartSearch.Index
 
         private SearchIndexInfo CreateSearchIndex(ISmartIndexSettings smartIndexSettings)
         {
-            using (new CMSActionContext {LogSynchronization = false})
+            using (new CMSActionContext 
+                       {
+                            LogSynchronization = false,
+                            ContinuousIntegrationAllowObjectSerialization = false
+                       })
             {
                 var searchIndexInfo = SearchIndexInfoFactory.Create(smartIndexSettings.IndexName,
                                                                     smartIndexSettings.IndexDisplayName);
