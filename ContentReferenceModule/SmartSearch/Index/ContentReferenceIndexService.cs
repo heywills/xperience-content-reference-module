@@ -7,9 +7,8 @@ using XperienceCommunity.ContentReferenceModule.Cms.Extensions;
 using XperienceCommunity.ContentReferenceModule.Constants;
 using XperienceCommunity.ContentReferenceModule.ContentReferences.Core;
 using XperienceCommunity.ContentReferenceModule.SmartSearch.Core;
-using XperienceCommunity.ContentReferenceModule.SmartSearch.Index;
 
-namespace XperienceCommunity.ContentReferenceModule.ContentReferences.Services
+namespace XperienceCommunity.ContentReferenceModule.SmartSearch.Index
 {
     /// <summary>
     /// Ensure the Content Reference index is created, that its being updated when
