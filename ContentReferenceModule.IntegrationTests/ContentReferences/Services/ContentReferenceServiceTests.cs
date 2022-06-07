@@ -21,7 +21,7 @@ namespace ContentReferenceModule.IntegrationTests.ContentReferences.Services
         {
             var smartSearchHelper = new SmartSearchHelper(_smartIndexSettings);
             var contentReferenceService = new ContentReferenceService(smartSearchHelper);
-            var contentReferences = contentReferenceService.GetParentReferencesByNodeGuidAndCulture(new Guid("c462b63b-cd96-4123-ae6a-8695411ba6b8"), "en-us"); // Jimmy Dimmick
+            var contentReferences = contentReferenceService.GetParentReferencesByNodeGuidAndCulture(new Guid("32d194af-76ab-435d-9175-71f8c099ded1"), "en-us"); 
 
             Assert.True(contentReferences != null && contentReferences.Count() != 0, "GetParentReferencesByNodeGuidAndCulture should have returned results");
         }

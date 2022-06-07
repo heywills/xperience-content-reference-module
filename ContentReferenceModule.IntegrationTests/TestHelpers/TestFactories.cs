@@ -12,8 +12,8 @@ namespace ContentReferenceModule.IntegrationTests.TestHelpers
         {
             var smartIndexSettings = new SmartIndexSettings()
             {
-                IndexName = "ContentReferenceModule_IntegrationTests",
-                IndexDisplayName = "Content Reference Module (Integration Tests Index)"
+                IndexName = "ContentReferenceModuleIndex",
+                IndexDisplayName = "Content Reference Module"
             };
             return smartIndexSettings;
         }

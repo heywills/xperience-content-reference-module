@@ -2,6 +2,7 @@
 using CMS.DocumentEngine;
 using CMS.SiteProvider;
 using System;
+using XperienceCommunity.ContentReferenceModule.Cms.Extensions;
 using XperienceCommunity.ContentReferenceModule.Constants;
 using XperienceCommunity.ContentReferenceModule.ContentReferences.Core;
 using XperienceCommunity.ContentReferenceModule.SmartSearch.Core;
@@ -61,10 +62,18 @@ namespace XperienceCommunity.ContentReferenceModule.ContentReferences.Services
 
 
             var nodeGuidsAsSearchTerms = string.Join(" ", contentReferences);
-            e.SearchDocument.Add(ContentReferenceServiceConstants.IndexNodeReferencesFieldName,
-                                 nodeGuidsAsSearchTerms,
-                                 true,
-                                 true);
+            var searchDocument = e.SearchDocument;
+            searchDocument.Add(ContentReferenceServiceConstants.IndexNodeReferencesFieldName,
+                               nodeGuidsAsSearchTerms,
+                               true,
+                               true);
+            var documentNamePath = treeNode.CreateDocumentNamePath();
+            searchDocument.Add(SmartSearchColumnNameConstants.DocumentPath,
+                               documentNamePath,
+                               true,
+                               false);
+
+            e.Content = string.Empty;
         }
 
         private void ContentObjectUsageIndex_AddSite(object sender, ObjectEventArgs e)
