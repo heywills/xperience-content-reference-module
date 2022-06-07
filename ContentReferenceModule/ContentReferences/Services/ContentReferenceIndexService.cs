@@ -1,11 +1,13 @@
 ﻿using CMS.DataEngine;
 using CMS.DocumentEngine;
+using CMS.Search;
 using CMS.SiteProvider;
 using System;
 using XperienceCommunity.ContentReferenceModule.Cms.Extensions;
 using XperienceCommunity.ContentReferenceModule.Constants;
 using XperienceCommunity.ContentReferenceModule.ContentReferences.Core;
 using XperienceCommunity.ContentReferenceModule.SmartSearch.Core;
+using XperienceCommunity.ContentReferenceModule.SmartSearch.Index;
 
 namespace XperienceCommunity.ContentReferenceModule.ContentReferences.Services
 {
@@ -59,20 +61,20 @@ namespace XperienceCommunity.ContentReferenceModule.ContentReferences.Services
 
             var treeNode = e.Node;
             var contentReferences = _contentInspectorService.GetContentReferences(treeNode);
-
-
             var nodeGuidsAsSearchTerms = string.Join(" ", contentReferences);
-            var searchDocument = e.SearchDocument;
-            searchDocument.Add(ContentReferenceServiceConstants.IndexNodeReferencesFieldName,
-                               nodeGuidsAsSearchTerms,
-                               true,
-                               true);
             var documentNamePath = treeNode.CreateDocumentNamePath();
-            searchDocument.Add(SmartSearchColumnNameConstants.DocumentPath,
-                               documentNamePath,
-                               true,
-                               false);
+            var searchDocument = e.SearchDocument;
+            searchDocument.Add(name: ContentReferenceServiceConstants.IndexNodeReferencesFieldName,
+                               value: nodeGuidsAsSearchTerms,
+                               store: true,
+                               tokenize: true);
 
+            // TODO: Find away to add DocumentNamePath without it being converted to lowercase.
+            // Kentico's abstraction from LuceneDocument seems to force this.
+            searchDocument.Add(name: SmartSearchColumnNameConstants.DocumentPath,
+                               value: documentNamePath,
+                               store: true,
+                               tokenize: false);
             e.Content = string.Empty;
         }
 

@@ -8,6 +8,6 @@ namespace XperienceCommunity.ContentReferenceModule.Constants
     {
         public const string IndexName = "ContentReferenceModuleIndex";
         public const string IndexDisplayName = "Content Reference Module Index";
-        public const string IndexNodeReferencesFieldName = "ContentIndexNodeReferences";
+        public const string IndexNodeReferencesFieldName = "contentindexnodereferences";
     }
 }
