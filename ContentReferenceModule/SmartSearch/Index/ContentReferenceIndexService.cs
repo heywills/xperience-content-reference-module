@@ -41,7 +41,9 @@ namespace XperienceCommunity.ContentReferenceModule.SmartSearch.Index
     ///   - DocumentHelper.UpdateDocument. It calls UpdateSearchIndexIfAllowed.
     ///   - Consder creating a custom SearchTaskInfo using SearchTaskInfoProvider.CreateTask
     ///     with the parameters necessary to call the customer indexer.
-    /// 
+    ///   - Better, look how KX13 Refresh 5 creates and registers the 
+    ///     CMS.MediaLibrary.MediaFilesUsageSearchIndexer to handle updates to pages.
+    ///      
     /// </remarks>
     internal class ContentReferenceIndexService : IContentReferenceIndexService
     {
