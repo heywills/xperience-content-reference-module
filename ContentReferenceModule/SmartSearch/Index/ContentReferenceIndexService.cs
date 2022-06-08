@@ -15,6 +15,34 @@ namespace XperienceCommunity.ContentReferenceModule.SmartSearch.Index
     /// content is changed, and that its configuration is updated when site and site-culture
     /// changes occur.
     /// </summary>
+    /// <remarks>
+    /// Using a Page indexer has wonderful benefits:
+    /// - Handles query performance and scalability for us.
+    /// - Handles incremental updates automatically.
+    ///
+    /// Put is has a few problems
+    /// - As of KX11 it forces custom field values to be lower case.
+    /// - Add requests and processes full-page content even though we don't need it.
+    /// - Includes fields we don't need.
+    /// - Page Types can be excluded outside of our control.
+    /// 
+    /// Ideas:
+    /// - Create a replacement for ILuceneSearchDocument. In AddGeneralField, set the
+    ///   valueToLower to false. This only solves the first problem.
+    ///   
+    /// - Create a custom index. This is a lot more work
+    ///   but will result in:
+    ///   - a solution that is more stable in different environments
+    ///   - a smaller index
+    ///   To handle performance concerns, look at:
+    ///   - DocumentSearchablesRetriever
+    ///   - DocumentSearchIndexer.Rebuild 
+    ///   To handle incremental update concerns, look at:
+    ///   - DocumentHelper.UpdateDocument. It calls UpdateSearchIndexIfAllowed.
+    ///   - Consder creating a custom SearchTaskInfo using SearchTaskInfoProvider.CreateTask
+    ///     with the parameters necessary to call the customer indexer.
+    /// 
+    /// </remarks>
     internal class ContentReferenceIndexService : IContentReferenceIndexService
     {
         private readonly ISmartIndexConfigurationManager _smartIndexConfigurationManager;
@@ -69,7 +97,8 @@ namespace XperienceCommunity.ContentReferenceModule.SmartSearch.Index
                                tokenize: true);
 
             // TODO: Find away to add DocumentNamePath without it being converted to lowercase.
-            // Kentico's abstraction from LuceneDocument seems to force this.
+            // Kentico's abstraction from LuceneDocument forces this, starting with KX11.
+            // https://devnet.kentico.com/questions/search-index-stored-in-lower-case
             searchDocument.Add(name: SmartSearchColumnNameConstants.DocumentPath,
                                value: documentNamePath,
                                store: true,
