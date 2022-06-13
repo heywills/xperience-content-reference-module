@@ -3,6 +3,7 @@ using CMS.Scheduler;
 using CMS.Search;
 using CMS.SiteProvider;
 using ContentReferenceModule.IntegrationTests.TestHelpers;
+using Moq;
 using NUnit.Framework;
 using XperienceCommunity.ContentReferenceModule.SmartSearch.Core;
 using XperienceCommunity.ContentReferenceModule.SmartSearch.Index;
@@ -18,6 +19,8 @@ namespace ContentReferenceModule.IntegrationTests.SmartSearch.Index
         private readonly ISearchIndexCultureInfoProvider _searchIndexCultureInfoProvider = Service.Resolve<ISearchIndexCultureInfoProvider>();
         private readonly ITaskInfoProvider _taskInfoProvider = Service.Resolve<ITaskInfoProvider>();
         private readonly ISmartIndexSettings _smartIndexSettings = TestFactories.CreateTestSmartIndexSettings();
+        private readonly IEventLogService _eventLogService = new Mock<IEventLogService>().Object;
+
 
         [Test()]
         public void InitializeSmartIndex_Creates_A_SmartIndex()
@@ -25,7 +28,8 @@ namespace ContentReferenceModule.IntegrationTests.SmartSearch.Index
             var smartIndexConfigurationHelper = new SmartIndexConfigurationManager(_siteInfoProvider,
                                                                                   _searchIndexSiteInfoProvider,
                                                                                   _searchIndexCultureInfoProvider,
-                                                                                  _taskInfoProvider);
+                                                                                  _taskInfoProvider,
+                                                                                  _eventLogService);
             smartIndexConfigurationHelper.Initialize(_smartIndexSettings);
             Assert.Pass();
         }

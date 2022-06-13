@@ -1,4 +1,5 @@
-﻿using CMS.DataEngine;
+﻿using CMS.Core;
+using CMS.DataEngine;
 using CMS.DocumentEngine;
 using CMS.Search;
 using CMS.SiteProvider;
@@ -16,48 +17,25 @@ namespace XperienceCommunity.ContentReferenceModule.SmartSearch.Index
     /// changes occur.
     /// </summary>
     /// <remarks>
-    /// Using a Page indexer has wonderful benefits:
-    /// - Handles query performance and scalability for us.
-    /// - Handles incremental updates automatically.
-    ///
-    /// Put is has a few problems
-    /// - As of KX11 it forces custom field values to be lower case.
-    /// - Add requests and processes full-page content even though we don't need it.
-    /// - Includes fields we don't need.
-    /// - Page Types can be excluded outside of our control.
-    /// 
-    /// Ideas:
-    /// - Create a replacement for ILuceneSearchDocument. In AddGeneralField, set the
-    ///   valueToLower to false. This only solves the first problem.
-    ///   
-    /// - Create a custom index. This is a lot more work
-    ///   but will result in:
-    ///   - a solution that is more stable in different environments
-    ///   - a smaller index
-    ///   To handle performance concerns, look at:
-    ///   - DocumentSearchablesRetriever
-    ///   - DocumentSearchIndexer.Rebuild 
-    ///   To handle incremental update concerns, look at:
-    ///   - DocumentHelper.UpdateDocument. It calls UpdateSearchIndexIfAllowed.
-    ///   - Consder creating a custom SearchTaskInfo using SearchTaskInfoProvider.CreateTask
-    ///     with the parameters necessary to call the customer indexer.
-    ///   - Better, look how KX13 Refresh 5 creates and registers the 
-    ///     CMS.MediaLibrary.MediaFilesUsageSearchIndexer to handle updates to pages.
-    ///      
+    /// Consider creating a custom smart search index instead of using a page indexer.
+    /// See: https://github.com/heywills/xperience-content-reference-module/issues/1
     /// </remarks>
     internal class ContentReferenceIndexService : IContentReferenceIndexService
     {
         private readonly ISmartIndexConfigurationManager _smartIndexConfigurationManager;
         private readonly ISmartIndexSettings _smartIndexSettings;
         private readonly IContentInspectorService _contentInspectorService;
+        private readonly IEventLogService _eventLogService;
 
         public ContentReferenceIndexService(ISmartIndexConfigurationManager smartIndexConfigurationManager,
                                             ISmartIndexSettings smartIndexSettings,
-                                            IContentInspectorService contentInspectorService)
+                                            IContentInspectorService contentInspectorService,
+                                            IEventLogService eventLogService)
         {
             _smartIndexConfigurationManager = smartIndexConfigurationManager;
             _smartIndexSettings = smartIndexSettings;
             _contentInspectorService = contentInspectorService;
+            _eventLogService = eventLogService;
         }
 
         public void Initialize()
@@ -81,31 +59,42 @@ namespace XperienceCommunity.ContentReferenceModule.SmartSearch.Index
 
         private void ContentObjectUsageIndex_GetContentExecute(object sender, DocumentSearchEventArgs e)
         {
-            var indexInfo = e.IndexInfo;
-            if (!indexInfo.IndexCodeName.Equals(_smartIndexSettings.IndexName,
-                                                StringComparison.InvariantCultureIgnoreCase))
+            try
             {
-                return;
+                var indexInfo = e.IndexInfo;
+                if (!indexInfo.IndexCodeName.Equals(_smartIndexSettings.IndexName,
+                                                    StringComparison.InvariantCultureIgnoreCase))
+                {
+                    return;
+                }
+
+                var treeNode = e.Node;
+                var contentReferences = _contentInspectorService.GetContentReferences(treeNode);
+                var nodeGuidsAsSearchTerms = string.Join(" ", contentReferences);
+                var documentNamePath = treeNode.CreateDocumentNamePath();
+                var searchDocument = e.SearchDocument;
+                searchDocument.Add(name: ContentReferenceServiceConstants.IndexNodeReferencesFieldName,
+                                   value: nodeGuidsAsSearchTerms,
+                                   store: true,
+                                   tokenize: true);
+
+                searchDocument.Add(name: SmartSearchColumnNameConstants.DocumentPath,
+                                   value: documentNamePath,
+                                   store: true,
+                                   tokenize: false);
+                e.Content = string.Empty;
             }
-
-            var treeNode = e.Node;
-            var contentReferences = _contentInspectorService.GetContentReferences(treeNode);
-            var nodeGuidsAsSearchTerms = string.Join(" ", contentReferences);
-            var documentNamePath = treeNode.CreateDocumentNamePath();
-            var searchDocument = e.SearchDocument;
-            searchDocument.Add(name: ContentReferenceServiceConstants.IndexNodeReferencesFieldName,
-                               value: nodeGuidsAsSearchTerms,
-                               store: true,
-                               tokenize: true);
-
-            // TODO: Find away to add DocumentNamePath without it being converted to lowercase.
-            // Kentico's abstraction from LuceneDocument forces this, starting with KX11.
-            // https://devnet.kentico.com/questions/search-index-stored-in-lower-case
-            searchDocument.Add(name: SmartSearchColumnNameConstants.DocumentPath,
-                               value: documentNamePath,
-                               store: true,
-                               tokenize: false);
-            e.Content = string.Empty;
+            catch (Exception ex)
+            {
+                var treeNode = e.Node;
+                _eventLogService.LogWarning(nameof(ContentReferenceModule),
+                                            "GetContentError",
+                                            $"An unexpected exception occured when indexing a page.\r\n" + 
+                                                $"NodeGuid: {treeNode?.NodeGUID}\r\n" + 
+                                                $"Culture: {treeNode?.DocumentCulture}\r\n" + 
+                                                $"Exception:\r\n" +
+                                                ex.ToString());
+            }
         }
 
         private void ContentObjectUsageIndex_AddSite(object sender, ObjectEventArgs e)

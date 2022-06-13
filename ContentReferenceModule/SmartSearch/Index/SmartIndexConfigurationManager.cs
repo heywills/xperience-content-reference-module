@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using CMS.Base;
+using CMS.Core;
 using CMS.Localization;
 using CMS.Scheduler;
 using CMS.Search;
@@ -20,6 +21,7 @@ namespace XperienceCommunity.ContentReferenceModule.SmartSearch.Index
         private readonly ISearchIndexSiteInfoProvider _searchIndexSiteInfoProvider;
         private readonly ISearchIndexCultureInfoProvider _searchIndexCultureInfoProvider;
         private readonly ITaskInfoProvider _taskInfoProvider;
+        private readonly IEventLogService _eventLogService;
         private SearchIndexInfo _searchIndexInfo;
 
         /// <summary>
@@ -32,7 +34,8 @@ namespace XperienceCommunity.ContentReferenceModule.SmartSearch.Index
         public SmartIndexConfigurationManager(ISiteInfoProvider siteInfoProvider,
                                               ISearchIndexSiteInfoProvider searchIndexSiteInfoProvider,
                                               ISearchIndexCultureInfoProvider searchIndexCultureInfoProvider,
-                                              ITaskInfoProvider taskInfoProvider)
+                                              ITaskInfoProvider taskInfoProvider,
+                                              IEventLogService eventLogService)
         {
             Guard.ArgumentNotNull(siteInfoProvider);
             Guard.ArgumentNotNull(searchIndexSiteInfoProvider);
@@ -41,6 +44,7 @@ namespace XperienceCommunity.ContentReferenceModule.SmartSearch.Index
             _searchIndexSiteInfoProvider = searchIndexSiteInfoProvider;
             _searchIndexCultureInfoProvider = searchIndexCultureInfoProvider;
             _taskInfoProvider = taskInfoProvider;
+            _eventLogService = eventLogService;
         }
 
         /// <summary>
@@ -64,19 +68,33 @@ namespace XperienceCommunity.ContentReferenceModule.SmartSearch.Index
 
         private SearchIndexInfo CreateSearchIndex(ISmartIndexSettings smartIndexSettings)
         {
-            using (new CMSActionContext 
-                       {
-                            LogSynchronization = false,
-                            ContinuousIntegrationAllowObjectSerialization = false
-                       })
+            try
             {
-                var searchIndexInfo = SearchIndexInfoFactory.Create(smartIndexSettings.IndexName,
-                                                                    smartIndexSettings.IndexDisplayName);
-                SearchIndexInfoProvider.SetSearchIndexInfo(searchIndexInfo);
-                AddAllSitesToIndex(searchIndexInfo);
-                RebuildIndex(searchIndexInfo);
-                ExecuteSearchTasks();
-                return searchIndexInfo;
+                using (new CMSActionContext
+                {
+                    LogSynchronization = false,
+                    ContinuousIntegrationAllowObjectSerialization = false
+                })
+                {
+                    var searchIndexInfo = SearchIndexInfoFactory.Create(smartIndexSettings.IndexName,
+                                                                        smartIndexSettings.IndexDisplayName);
+                    SearchIndexInfoProvider.SetSearchIndexInfo(searchIndexInfo);
+                    AddAllSitesToIndex(searchIndexInfo);
+                    RebuildIndex(searchIndexInfo);
+                    ExecuteSearchTasks();
+                    _eventLogService.LogInformation(nameof(ContentReferenceModule),
+                                                    "CreateSearchIndex",
+                                                    $"Created new Smart Search index, {smartIndexSettings?.IndexName}.");
+                    return searchIndexInfo;
+                }
+            }
+            catch (Exception ex)
+            {
+                _eventLogService.LogWarning(nameof(ContentReferenceModule),
+                                            "CreateSearchIndex",
+                                            $"An unexpected exception occured when creating the Smart Search index, {smartIndexSettings?.IndexName}.\r\n\r\n"
+                                            + ex.ToString());
+                return null;
             }
         }
 
@@ -86,8 +104,20 @@ namespace XperienceCommunity.ContentReferenceModule.SmartSearch.Index
         /// <param name="siteInfo"></param>
         public void AddSite(SiteInfo siteInfo)
         {
-            VerifyInitialization();
-            AddSite(_searchIndexInfo, siteInfo);
+            try
+            {
+                VerifyInitialization();
+                AddSite(_searchIndexInfo, siteInfo);
+            }
+            catch (Exception ex)
+            {
+                _eventLogService.LogWarning(nameof(ContentReferenceModule),
+                                            "AddSite",
+                                            $"An unexpected exception occured when adding a site to the Smart Search index.\r\n" +
+                                            $"Index: {_searchIndexInfo?.IndexName}\r\n" +
+                                            $"Site:{siteInfo?.SiteName}\r\n\r\n" +
+                                            ex.ToString());
+            }
         }
 
         /// <summary>
@@ -96,8 +126,20 @@ namespace XperienceCommunity.ContentReferenceModule.SmartSearch.Index
         /// <param name="cultureSiteInfo"></param>
         public void AddCulture(CultureSiteInfo cultureSiteInfo)
         {
-            VerifyInitialization();
-            AddCulture(_searchIndexInfo, cultureSiteInfo.CultureID);
+            try
+            {
+                VerifyInitialization();
+                AddCulture(_searchIndexInfo, cultureSiteInfo.CultureID);
+            }
+            catch (Exception ex)
+            {
+                _eventLogService.LogWarning(nameof(ContentReferenceModule),
+                                            "AddCulture",
+                                            $"An unexpected exception occured when adding a culture to the Smart Search index.\r\n" +
+                                            $"Index: {_searchIndexInfo?.IndexName}\r\n" +
+                                            $"Culture ID:{cultureSiteInfo?.CultureID}\r\n\r\n" +
+                                            ex.ToString());
+            }
         }
 
         /// <summary>
@@ -150,19 +192,25 @@ namespace XperienceCommunity.ContentReferenceModule.SmartSearch.Index
             var taskInfo = _taskInfoProvider.Get(ScheduleTaskNameConstants.SearchTaskExecutor, 0);
             if (taskInfo == null)
             {
-                // TODO: Log that the 'Execute local search tasks' scheduled task was not found.
+                _eventLogService.LogWarning(nameof(ContentReferenceModule),
+                                            "ExecuteSearchTasks",
+                                            $"The 'Execute local search tasks' (${ScheduleTaskNameConstants.SearchTaskExecutor}) scheduled task was not found.");
                 return;
             }
 
             if (taskInfo.TaskIsRunning)
             {
-                // TODO: Log that the task is already running
+                _eventLogService.LogInformation(nameof(ContentReferenceModule),
+                                                "ExecuteSearchTasks",
+                                                $"The 'Execute local search tasks' (${ScheduleTaskNameConstants.SearchTaskExecutor}) scheduled task is already running.");
                 return;
             }
 
             if (!taskInfo.TaskEnabled)
             {
-                // TODO: Log that the task is not enabled
+                _eventLogService.LogWarning(nameof(ContentReferenceModule),
+                                            "ExecuteSearchTasks",
+                                            $"The 'Execute local search tasks' (${ScheduleTaskNameConstants.SearchTaskExecutor}) scheduled task cannot be run, because it is not enabled.");
             }
 
             SchedulingExecutor.ExecuteTask(taskInfo);

@@ -1,10 +1,9 @@
-﻿using CMS.Helpers;
+﻿using CMS.Core;
+using CMS.Helpers;
 using CMS.Membership;
 using CMS.Search;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using XperienceCommunity.ContentReferenceModule.Helpers;
 using XperienceCommunity.ContentReferenceModule.SmartSearch.Core;
 
@@ -13,12 +12,14 @@ namespace XperienceCommunity.ContentReferenceModule.SmartSearch.Search
     public class SmartSearchHelper : ISmartSearchHelper
     {
         private readonly ISmartIndexSettings _smartIndexSettings;
+        private readonly IEventLogService _eventLogService;
         private SearchIndexInfo _searchIndexInfo;
 
-        public SmartSearchHelper(ISmartIndexSettings smartIndexSettings)
+        public SmartSearchHelper(ISmartIndexSettings smartIndexSettings,
+                                 IEventLogService eventLogService)
         {
             _smartIndexSettings = smartIndexSettings;
-
+            _eventLogService = eventLogService;
         }
 
         public IEnumerable<SearchResultItem> GetSearchResultItemsByFieldTerm(string fieldName,
@@ -30,7 +31,6 @@ namespace XperienceCommunity.ContentReferenceModule.SmartSearch.Search
             var searchIndexInfo = GetSearchIndexInfo();
             if(searchIndexInfo == null)
             {
-                // TODO: Log missing index
                 return Enumerable.Empty<SearchResultItem>();
             }
             var searchParameters = CreateSearchParameters(searchIndexInfo.IndexName, fieldName, term, cultureCode);
@@ -77,6 +77,17 @@ namespace XperienceCommunity.ContentReferenceModule.SmartSearch.Search
             if(_searchIndexInfo == null)
             {
                 _searchIndexInfo = SearchIndexInfoProvider.GetSearchIndexInfo(_smartIndexSettings.IndexName);
+            }
+            if(_searchIndexInfo == null)
+            {
+                _eventLogService.LogError(nameof(ContentReferenceModule),
+                                          "GetSearchIndex",
+                                          $"The Smart Search index, {_smartIndexSettings.IndexDisplayName} ({_smartIndexSettings.IndexName}), could not be found.\r\n" +
+                                           "Check the following:\r\n" +
+                                           " - The index was successfully created when this module was loaded.\r\n" +
+                                           " - It was not deleted after the module was loaded.\r\n" +
+                                           " - It's name was not changed." +
+                                           " - Web Farm synchronization is syncronizing smart indexes to all members of the farm.");
             }
             return _searchIndexInfo;
         }

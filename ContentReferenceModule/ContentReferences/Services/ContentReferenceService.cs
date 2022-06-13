@@ -1,4 +1,5 @@
-﻿using CMS.Search;
+﻿using CMS.Core;
+using CMS.Search;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,20 +14,40 @@ namespace XperienceCommunity.ContentReferenceModule.ContentReferences.Services
     public class ContentReferenceService : IContentReferenceService
     {
 
-        ISmartSearchHelper _smartSearchHelper;
+        private readonly ISmartSearchHelper _smartSearchHelper;
+        private readonly IEventLogService _eventLogService;
 
-        public ContentReferenceService(ISmartSearchHelper smartSearchHelper)
+
+        public ContentReferenceService(ISmartSearchHelper smartSearchHelper,
+                                       IEventLogService eventLogService)
         {
             _smartSearchHelper = smartSearchHelper;
+            _eventLogService = eventLogService;
+
         }
 
         public IEnumerable<ContentReference> GetParentReferencesByNodeGuidAndCulture(Guid nodeGuid, string cultureCode)
         {
-            var searchResultItems = _smartSearchHelper.GetSearchResultItemsByFieldTerm(ContentReferenceServiceConstants.IndexNodeReferencesFieldName,
-                                                                                       nodeGuid.ToString(),
-                                                                                       cultureCode);
-            var contentReferences = searchResultItems.Select(x => CreateContentReferenceFromSearchResultItem(x));
-            return contentReferences;
+            try
+            {
+                var searchResultItems = _smartSearchHelper.GetSearchResultItemsByFieldTerm(ContentReferenceServiceConstants.IndexNodeReferencesFieldName,
+                                                                                           nodeGuid.ToString(),
+                                                                                           cultureCode);
+                var contentReferences = searchResultItems.Select(x => CreateContentReferenceFromSearchResultItem(x));
+                return contentReferences;
+            }
+            catch (Exception ex)
+            {
+                _eventLogService.LogError(nameof(ContentReferenceModule),
+                                          "GetReferences",
+                                          $"An unexpected exception occured when querying the Smart Search index.\r\n" +
+                                                $"NodeGuid: {nodeGuid}\r\n" +
+                                                $"Culture: {cultureCode}\r\n\r\n" +
+                                                $"Exception:\r\n" +
+                                                ex.ToString());
+                return Enumerable.Empty<ContentReference>();
+            }
+
         }
 
         internal ContentReference CreateContentReferenceFromSearchResultItem(SearchResultItem searchResultItem)
