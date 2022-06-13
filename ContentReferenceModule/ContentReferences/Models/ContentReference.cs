@@ -15,12 +15,12 @@ namespace XperienceCommunity.ContentReferenceModule.ContentReferences.Models
         /// <summary>
         /// The unique Document ID
         /// </summary>
-        public int DocumentID { get; set; }
+        public int? DocumentID { get; set; }
 
         /// <summary>
         /// The GUID for the document
         /// </summary>
-        public Guid DocumentGuid { get; set; }
+        public Guid? DocumentGuid { get; set; }
 
         /// <summary>
         /// The document's culture code.
@@ -30,12 +30,12 @@ namespace XperienceCommunity.ContentReferenceModule.ContentReferences.Models
         /// <summary>
         /// The unique Node ID
         /// </summary>
-        public int NodeID { get; set; }
+        public int? NodeID { get; set; }
 
         /// <summary>
         /// The GUID for the node
         /// </summary>
-        public Guid NodeGuid { get; set; }
+        public Guid? NodeGuid { get; set; }
 
         /// <summary>
         /// The node alias path of the document
