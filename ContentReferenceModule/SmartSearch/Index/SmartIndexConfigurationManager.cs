@@ -62,6 +62,7 @@ namespace XperienceCommunity.ContentReferenceModule.SmartSearch.Index
         private SearchIndexInfo GetSearchIndex(ISmartIndexSettings smartIndexSettings)
         {
             // TODO: Verify and update search index settings
+            // https://github.com/heywills/xperience-content-reference-module/issues/3
             var searchIndexInfo = SearchIndexInfoProvider.GetSearchIndexInfo(smartIndexSettings.IndexName);
             return searchIndexInfo;
         }

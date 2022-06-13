@@ -14,8 +14,8 @@ namespace XperienceCommunity.ContentReferenceModule.ContentReferences.Services
     /// </summary>
     public class ContentInspectorService : IContentInspectorService
     {
-        IEnumerable<IReferenceInspector> _referenceInspectors;
-        ITreeNodeRepository _treeNodeRepository;
+        private readonly IEnumerable<IReferenceInspector> _referenceInspectors;
+        private readonly ITreeNodeRepository _treeNodeRepository;
 
         public ContentInspectorService(IEnumerable<IReferenceInspector> referenceInspectors,
                                        ITreeNodeRepository treeNodeRepository)
