@@ -3,11 +3,13 @@ using XperienceCommunity.ContentReferenceModule.Cms.Core;
 using XperienceCommunity.ContentReferenceModule.Cms.Repositories;
 using XperienceCommunity.ContentReferenceModule.Constants;
 using XperienceCommunity.ContentReferenceModule.ContentReferences.Core;
+using XperienceCommunity.ContentReferenceModule.ContentReferences.Factories;
 using XperienceCommunity.ContentReferenceModule.ContentReferences.Inspectors;
 using XperienceCommunity.ContentReferenceModule.ContentReferences.Services;
 using XperienceCommunity.ContentReferenceModule.SmartSearch.Core;
 using XperienceCommunity.ContentReferenceModule.SmartSearch.Index;
 using XperienceCommunity.ContentReferenceModule.SmartSearch.Models;
+using XperienceCommunity.ContentReferenceModule.SmartSearch.Search;
 
 namespace XperienceCommunity.ContentReferenceModule.Infrastructure.Extensions
 {
@@ -38,6 +40,9 @@ namespace XperienceCommunity.ContentReferenceModule.Infrastructure.Extensions
             services.AddTransient<IReferenceInspector, PageRelationshipInspector>();
             services.AddTransient<IReferenceInspector, WidgetReferenceInspector>();
             services.AddTransient<ISmartIndexConfigurationManager, SmartIndexConfigurationManager>();
+            services.AddTransient<IContentReferenceService, ContentReferenceService> ();
+            services.AddTransient<ISmartSearchHelper, SmartSearchHelper> ();
+            services.AddTransient <IContentReferenceFactory, ContentReferenceFactory> ();
             return services;
         }
     }

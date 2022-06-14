@@ -27,7 +27,7 @@ namespace ContentReferenceModule.IntegrationTests.ContentReferences.Services
         {
             var smartSearchHelper = new SmartSearchHelper(_smartIndexSettings, _eventLogService);
             var contentReferenceService = new ContentReferenceService(smartSearchHelper, _contentReferenceFactory, _eventLogService);
-            var contentReferences = contentReferenceService.GetParentReferencesByNodeGuidAndCulture(new Guid("32d194af-76ab-435d-9175-71f8c099ded1"), "en-us"); 
+            var contentReferences = contentReferenceService.GetParentReferencesByNodeGuidAndCulture(new Guid("32d194af-76ab-435d-9175-71F8C099DED1"), "EN-us"); 
 
             Assert.True(contentReferences != null && contentReferences.Count() != 0, "GetParentReferencesByNodeGuidAndCulture should have returned results");
         }
