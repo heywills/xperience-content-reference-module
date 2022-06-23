@@ -7,12 +7,12 @@ Additionally, this component is **extensible**. If it doesn't detect a content r
 Creating content relationships is becoming increasingly popular with the advent of headless CMS and hybrid CMS platforms. However, Kentico Xperience has always promoted the use of structured content, decoupled from the design. This typically entails connecting content through page relationships, field references, and widget properties.
 
 ## Solution
-This module automatically creates a Kentico smart index for quickly looking up content references. It uses multiple `IReferenceInspector` implementations so that it can find content referneced in page type fields, widget properties, and page relationships. The index makes it easy to perform a reverse-lookup -- that is to find where any piece of content is used. It also enables finding all the _child_ content used on a page, including all descendants. So, if you need to find all the content items used on a page, it is a fast and simple query.
+This module automatically creates a Kentico smart index for quickly looking up content references. It uses multiple `IReferenceInspector` implementations so that it can find content referenced in page type fields, widget properties, and page relationships. The index makes it easy to perform a reverse lookup -- that is to find where any piece of content is used. It also enables finding all the _child_ content used on a page, including all descendants. So, if you need to find all the content items used on a page, it is a fast and simple query.
 
 ### Scenarios
-We've encountered many scenarios where the ability to look up where content is used is valuable. Here's some examples:
+We've encountered many scenarios where the ability to look up where content is used is valuable. Here are some examples:
 
-* An author has a library of content items like heros, testimonials, and CTAs and needs the ability to quickly see where each content item is used.
+* An author has a library of content items like heroes, testimonials, and CTAs and needs the ability to quickly see where each content item is used.
 * A content manager needs to submit several pages for translation, including all the content items referenced by the page. However, without a solution to find all referenced content, it is very difficult to create a translation package with all required pieces of content.
 
 ### Example solutions
@@ -30,41 +30,54 @@ A workflow action to enable synchronizing a page and its dependencies.
 ![Synchronize page example](/images/synchronize-dependencies-example.png)
 
 ## Installation
-To install, add the NuGet package, "XperienceCommunity.ContentReferenceModule", to your CMS project. It will automically create the smart index required.
+To install, add the NuGet package, "XperienceCommunity.ContentReferenceModule", to your CMS project. It will automatically create the smart index required.
 
 ## Usage
-After adding the NuGet package to your solution, you can use Kentico's service locator, or constructor-based DI to access the `ContentReferenceService` and call 
+### Querying content references in a CMS project
+After adding the NuGet package to your solution, you can use Kentico's service locator, or constructor-based DI to access the `ContentReferenceService` and call `IContentReferenceService.GetParentReferences(ITreeNode)`.
 
 Here's an example of using the service in the CMS project:
 ```
 var contentReferenceService = Service.Resolve<IContentReferenceService>();
 var listOfWhereNodeIsUsed = contentReferenceService
-                                .GetParentReferencesByNode(node);
+                                .GetParentReferences(treeNode);
 ```
-
-You can also add the NuGet package to your website, if you need to access the `ContentReferenceService` service there. Here's an example:
-
-```
+### Querying content references in a website project
+You can also add the NuGet package to your website, if you need to access the `ContentReferenceService` service there. In .NET Core/6+, add the required dependencies to your service collection using the `AddContentReferenceService()` extension method:
 
 ```
+using XperienceCommunity.ContentReferenceModule.Infrastructure.Extensions;
 
-### Querying content references
+...
 
-### Adding content reference types
+services.AddContentReferenceService();
+```
 
+Query content references by injecting `IContentReferenceService`:
+```
+var listOfWhereNodeIsUsed = _contentReferenceService
+                                .GetParentReferences(nodeGuid, "en-us");
+```
+Or
+
+```
+var listOfWhereNodeIsUsed = _contentReferenceService
+                                .GetParentReferences(treeNode);
+
+```
 
 ## Troubleshooting
-
+This solution uses Xperience smart search. Ensure the index "" is created, built, and propagated to all members of the web farm.
 ## Compatibility
-.NET 4.6.1 or higher
-Kentico Xperience versions
-13.0.0 or higher
+* .NET 4.8 or higher for the admin app or MVC5 projects
+* .NET Core 3.1 or higher for .NET Core/.NET 6 for projects
+* Kentico Xperience versions 13.0.0 or higher
 
-License
+## License
 This project uses a standard MIT license which can be found here.
 
-Contribution
+## Contribution
 Contributions are welcome. Feel free to submit pull requests to the repo.
 
-Support
+## Support
 Please report bugs as issues in this GitHub repo. We'll respond as soon as possible.
