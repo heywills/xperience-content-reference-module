@@ -30,7 +30,7 @@ A workflow action to enable synchronizing a page and its dependencies.
 ![Synchronize page example](/images/synchronize-dependencies-example.png)
 
 ## Installation
-To install, add the NuGet package, "XperienceCommunity.ContentReferenceModule", to your CMS project. It will automatically create the smart index required.
+To install, add the NuGet package, [XperienceCommunity.ContentReferenceModule](https://www.nuget.org/packages/XperienceCommunity.ContentReferenceModule), to your CMS project. It will automatically create the smart index required.
 
 ## Usage
 ### Querying content references in a CMS project
