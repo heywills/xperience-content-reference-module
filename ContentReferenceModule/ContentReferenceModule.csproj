@@ -1,0 +1,30 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <AssemblyName>XperienceCommunity.ContentReferenceModule</AssemblyName>
+    <RootNamespace>XperienceCommunity.ContentReferenceModule</RootNamespace>
+    <Authors>Kentico Xperience Community</Authors>
+    <PackageProjectUrl>https://github.com/heywills/xperience-content-reference-module</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/heywills/xperience-content-reference-module</RepositoryUrl>
+    <PackageIcon>icon.png</PackageIcon>
+    <PackageIconUrl />
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageTags>Kentico Xperience Atomic Content</PackageTags>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Copyright>Copyright ©  2022</Copyright>
+    <Description>For Kentico Xperience 13, this module provides a service for easy reverse lookup of content references, whether they are through Xperience page relationships, field references, or widget property references.</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Kentico.Xperience.Libraries" Version="13.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\images\icon.png">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+  </ItemGroup>
+
+</Project>
