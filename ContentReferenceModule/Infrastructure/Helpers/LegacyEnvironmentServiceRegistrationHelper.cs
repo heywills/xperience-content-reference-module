@@ -12,7 +12,7 @@ namespace XperienceCommunity.ContentReferenceModule.Infrastructure.Helpers
             if (IsRunningInCmsApp() || IsRunningExternal())
             {
                 var serviceCollection = new ServiceCollection();
-                serviceCollection.UseContentReferenceService();
+                serviceCollection.AddContentReferenceService();
                 serviceCollection.RegisterWithKenticoServiceLocator();
             }
         }

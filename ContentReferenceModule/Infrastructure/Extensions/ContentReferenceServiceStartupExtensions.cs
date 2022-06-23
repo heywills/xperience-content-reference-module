@@ -25,7 +25,7 @@ namespace XperienceCommunity.ContentReferenceModule.Infrastructure.Extensions
         /// <param name="configuration"></param>
         /// <param name="configurationKey"></param>
         /// <returns></returns>
-        public static IServiceCollection UseContentReferenceService(this IServiceCollection services)
+        public static IServiceCollection AddContentReferenceService(this IServiceCollection services)
         {
             services.AddSingleton<ISmartIndexSettings>(new SmartIndexSettings()
             {
