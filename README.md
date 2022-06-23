@@ -81,3 +81,8 @@ Contributions are welcome. Feel free to submit pull requests to the repo.
 
 ## Support
 Please report bugs as issues in this GitHub repo. We'll respond as soon as possible.
+
+There are existing know issues and plans for this repo here:
+
+https://github.com/heywills/xperience-content-reference-module/issues
+
