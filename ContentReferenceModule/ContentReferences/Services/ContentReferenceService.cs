@@ -1,4 +1,5 @@
-﻿using CMS.Core;
+﻿using CMS.Base;
+using CMS.Core;
 using CMS.Search;
 using System;
 using System.Collections.Generic;
@@ -27,6 +28,11 @@ namespace XperienceCommunity.ContentReferenceModule.ContentReferences.Services
             _contentReferenceFactory = contentReferenceFactory;
             _eventLogService = eventLogService;
 
+        }
+
+        public IEnumerable<ContentReference> GetParentReferencesByNode(ITreeNode node)
+        {
+            return GetParentReferencesByNodeGuidAndCulture(node.NodeGUID, node.DocumentCulture);
         }
 
         public IEnumerable<ContentReference> GetParentReferencesByNodeGuidAndCulture(Guid nodeGuid, string cultureCode)
