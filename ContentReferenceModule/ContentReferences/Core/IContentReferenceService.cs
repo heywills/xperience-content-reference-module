@@ -7,8 +7,8 @@ namespace XperienceCommunity.ContentReferenceModule.ContentReferences.Core
 {
     public interface IContentReferenceService
     {
-        IEnumerable<ContentReference> GetParentReferencesByNode(ITreeNode node);
+        IEnumerable<ContentReference> GetParentReferences(ITreeNode node);
 
-        IEnumerable<ContentReference> GetParentReferencesByNodeGuidAndCulture(Guid nodeGuid, string cultureCode);
+        IEnumerable<ContentReference> GetParentReferences(Guid nodeGuid, string cultureCode);
     }
 }

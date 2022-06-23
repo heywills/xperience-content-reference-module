@@ -30,12 +30,12 @@ namespace XperienceCommunity.ContentReferenceModule.ContentReferences.Services
 
         }
 
-        public IEnumerable<ContentReference> GetParentReferencesByNode(ITreeNode node)
+        public IEnumerable<ContentReference> GetParentReferences(ITreeNode node)
         {
-            return GetParentReferencesByNodeGuidAndCulture(node.NodeGUID, node.DocumentCulture);
+            return GetParentReferences(node.NodeGUID, node.DocumentCulture);
         }
 
-        public IEnumerable<ContentReference> GetParentReferencesByNodeGuidAndCulture(Guid nodeGuid, string cultureCode)
+        public IEnumerable<ContentReference> GetParentReferences(Guid nodeGuid, string cultureCode)
         {
             try
             {
