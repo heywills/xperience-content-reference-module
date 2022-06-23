@@ -30,7 +30,7 @@ namespace XperienceCommunity.ContentReferenceModule.ContentReferences.Services
 
         }
 
-        public IEnumerable<ContentReference> GetParentReferences(ITreeNode node)
+        public IEnumerable<ContentReference> GetParentReferencesByNode(ITreeNode node)
         {
             return GetParentReferences(node.NodeGUID, node.DocumentCulture);
         }
